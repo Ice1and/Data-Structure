@@ -73,5 +73,7 @@ int main() {
 
     int element = locate(10);
     cout << element << endl;
+
+    delete seqList;
     return 0;
 }
