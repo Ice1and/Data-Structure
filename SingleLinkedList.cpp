@@ -46,31 +46,83 @@ Node* find(int value) {
 bool insert(int i, int data) {
     // 检查插入位置的合法性
     if (i > headerNodePointer->data + 1) {
-        cout << '插入位置不合法' << endl;
+        cout << "插入位置不合法" << endl;
         return false;
     }
 
-    // 获取第 i - 1 的结点指针
+    // 获取第 i - 1 的结点指针，进行后插操作
     Node* nodePointer = headerNodePointer;
-    for (int j = 0; j < i; j++) {
+    for (int j = 0; j < i - 1; j++) {
         nodePointer = nodePointer->nextNode;
-        j++;
     }
-    Node* newNodePointer = new Node;
-    newNodePointer->data = data;
-    newNodePointer->nextNode = nodePointer->nextNode;       // 新结点的 nextNode 为第 i - 1 个结点的 nextNode
-    nodePointer->nextNode = newNodePointer;     // 第 i - 1 个结点的 nextNode 为新插入的新结点
+    Node* newNode = new Node;
+    newNode->data = data;
+    newNode->nextNode = nodePointer->nextNode;       // 新结点的 nextNode 为第 i - 1 个结点的 nextNode
+    nodePointer->nextNode = newNode;     // 第 i - 1 个结点的 nextNode 为新插入的新结点
+
+    headerNodePointer->data++;
 
     return true;
 }
 
+bool deleteNode(int i) {
+    if (i > headerNodePointer->data) {
+        cout << "需要删除的i值不合法" << endl;
+        return false;
+    }
+
+    Node *pointer = headerNodePointer;
+    int j = 0;
+    while(pointer->nextNode != NULL && j < i - 1) {     // 找到待删除结点的前驱结点
+        pointer = pointer->nextNode;
+        j++;
+    }
+
+    Node *temp = pointer->nextNode;
+    pointer->nextNode = temp->nextNode;
+    delete temp;
+
+    return true;
+};
+
 void deleteAllNode() {
-    cout << 'haha' << endl;
+    Node *pointer = headerNodePointer;
+    while(pointer) {
+        Node *temp = pointer->nextNode;
+        delete pointer;
+        pointer = temp;
+    }
+}
+
+void printAllNode() {
+    Node *pointer = headerNodePointer;
+    while(pointer->nextNode != NULL) {
+        pointer = pointer->nextNode;
+        cout << pointer->data << " ";
+    }
+    cout << endl;
 }
 
 int main() {
     initLinkedList();
 
-    delete headerNodePointer;
+    insert(1, 39);
+    int l = length();
+    cout << "length: " << l << endl;
+    insert(1, 22);
+    l = length();
+    cout << "length: " << l << endl;
+    insert(3, 99);
+    l = length();
+    cout << "length: " << l << endl;
+    printAllNode();
+
+    Node *value = find(99);
+    cout << value->data << endl;
+
+    value = get(1);
+    cout << value->data << endl;
+
+    deleteAllNode();
     return 0;
 }
